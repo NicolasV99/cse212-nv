@@ -15,8 +15,7 @@ public static class ArraySelectorSolution
         Console.WriteLine("<char[]>{" + string.Join(", ", charResult) + "}"); // <char[]>{A, B, A, B, A, B, A, B, A, B}
     }
 
-    private static int[] ListSelector(int[] list1, int[] list2, int[] select)
-    {
+    private static int[] ListSelector(int[] list1, int[] list2, int[] select){
         var result = new int[select.Length];
         var l1Idx = 0;
         var l2Idx = 0;
