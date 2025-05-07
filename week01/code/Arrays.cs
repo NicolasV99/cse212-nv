@@ -12,8 +12,20 @@ public static class Arrays
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+        
+        //We need to create a new array from length, after we need to iterate from 0
+        //for calculate the next numbers, next we assign the numbers to a index in 
+        //the array and finally we return the arrey.
 
-        return []; // replace this return statement with your own
+        //Create a new array for doubles
+        double[] result = new double[length];
+        //Iterate to populate the array with multiples.
+        for (int i = 0; i < length; i++){
+            //Calculate the multiple, number * 1, number * 2, etc...
+            result[i] = number * (i + 1);
+        }
+
+        return result; // Return the array
     }
 
     /// <summary>
@@ -29,5 +41,29 @@ public static class Arrays
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+
+        //We will use list slicing and manipulation
+        //We get the elements that willbe moved to the front of the list(last items from amount)
+        //Next we extract these element into a new temporaly list, next we remove
+        //the last amount items from the original data. Finally we insert the temporaly
+        //list at the beginning of the original data.
+
+        if (data == null || data.Count == 0 || amount <= 0 ){
+            return;
+        } 
+        int n = data.Count;
+        amount = amount % n; //where amount > n
+
+        if (amount == 0){
+            return;
+        }
+
+        //Get the last 'amount' elements.
+        List<int> elementsToMove = data.GetRange(n - amount, amount);
+        //Remove these elements from the end
+        data.RemoveRange(n - amount, amount);  
+        //Insert these elements at the beginning.
+        data.InsertRange(0, elementsToMove);
+
     }
 }
