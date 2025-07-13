@@ -5,15 +5,17 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 // Fix the code being tested to match requirements and make all tests pass. 
 
 [TestClass]
-public class TakingTurnsQueueTests
-{
+public class TakingTurnsQueueTests{
     [TestMethod]
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (5), Sue (3) and
     // run until the queue is empty
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, Sue, Tim, Tim
     // Defect(s) Found: 
-    public void TestTakingTurnsQueue_FiniteRepetition()
-    {
+    // 1. The 'Person' class 'Turns' property was not mutable (lacked a 'set' accessor), preventing turns from being decremented.
+    // 2. The 'GetNextPerson' method in 'TakingTurnsQueue' initially did not re-enqueue the person if they still had turns left.
+    //    This caused the queue to empty prematurely after only 3 iterations (Bob, Tim, Sue), leading to an Assert.Fail
+    //    or an ArgumentOutOfRangeException as the test expected more items.
+    public void TestTakingTurnsQueue_FiniteRepetition(){
         var bob = new Person("Bob", 2);
         var tim = new Person("Tim", 5);
         var sue = new Person("Sue", 3);
@@ -44,6 +46,8 @@ public class TakingTurnsQueueTests
     // After running 5 times, add George with 3 turns.  Run until the queue is empty.
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, George, Sue, Tim, George, Tim, George
     // Defect(s) Found: 
+    // 1. The GetNextPerson re-enqueue logic and AddPerson don't work correctly. This test primarily doesn't validate that adding a person midway
+    //    inserts them at the end of the queue for future turns.
     public void TestTakingTurnsQueue_AddPlayerMidway()
     {
         var bob = new Person("Bob", 2);
@@ -86,6 +90,15 @@ public class TakingTurnsQueueTests
     // Run 10 times.
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, Sue, Tim, Tim
     // Defect(s) Found: 
+    //The logic for 'infinite turns' (0 or less) in GetNextPerson was not fully implemented or was incorrect.
+    //    Specifically, the condition 'person.Turns <= 0' was needed in the re-enqueue logic to ensure
+    //    persons with 0 or negative turns are always re-enqueued without decrementing their turns,
+    //    as they are considered to have infinite turns.
+    //    Initially, Tim's 'Turns' might have been decremented if the condition was only 'person.Turns > 0',
+    //    or he might not have been re-enqueued if 'person.Turns <= 0' was not properly handled.
+    //    The assertion `Assert.AreEqual(timTurns, infinitePerson.Turns)` would fail if Tim's turns changed.
+
+
     public void TestTakingTurnsQueue_ForeverZero()
     {
         var timTurns = 0;
@@ -117,6 +130,12 @@ public class TakingTurnsQueueTests
     // Run 10 times.
     // Expected Result: Tim, Sue, Tim, Sue, Tim, Sue, Tim, Tim, Tim, Tim
     // Defect(s) Found: 
+    // 1. Similar to TestTakingTurnsQueue_ForeverZero, the handling of negative turns for infinite repetition
+    //    was likely missing or incorrect in GetNextPerson. The logic needs to ensure that if person.Turns <= 0,
+    //    they are re-enqueued without modification to their 'Turns' value, as per the infinite turns definition.
+    //    The assertion `Assert.AreEqual(timTurns, infinitePerson.Turns)` specifically checks that the original
+    //    'Turns' value for infinite players is preserved.
+
     public void TestTakingTurnsQueue_ForeverNegative()
     {
         var timTurns = -3;
@@ -144,6 +163,11 @@ public class TakingTurnsQueueTests
     // Scenario: Try to get the next person from an empty queue
     // Expected Result: Exception should be thrown with appropriate error message.
     // Defect(s) Found: 
+    // 1. Initially, GetNextPerson did not throw an InvalidOperationException when the queue was empty.
+    //    Instead, it would likely result in a runtime error (e.g., trying to Dequeue from an empty Queue<T>).
+    //    The fix requires adding an explicit check for _queue.Count == 0 and throwing the correct exception.
+
+
     public void TestTakingTurnsQueue_Empty()
     {
         var players = new TakingTurnsQueue();

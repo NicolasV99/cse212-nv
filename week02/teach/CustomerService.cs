@@ -3,7 +3,8 @@
 /// added and allows customers to be serviced.
 /// </summary>
 public class CustomerService {
-    public static void Run() {
+    public static void Run()
+    {
         // Example code to see what's in the customer service queue:
         // var cs = new CustomerService(10);
         // Console.WriteLine(cs);
@@ -16,7 +17,8 @@ public class CustomerService {
         Console.WriteLine("Test 1");
 
         // Defect(s) Found: 
-
+        var cs1 = new CustomerService(0);
+        Console.WriteLine($"Expected _maxSize: 10, Actual _maxSize: {cs1._maxSize}");
         Console.WriteLine("=================");
 
         // Test 2
@@ -25,10 +27,23 @@ public class CustomerService {
         Console.WriteLine("Test 2");
 
         // Defect(s) Found: 
-
+        var cs2 = new CustomerService(5);
+        Console.WriteLine($"Expected _maxSize: 5, Actual _maxSize: {cs2._maxSize}");
         Console.WriteLine("=================");
 
-        // Add more Test Cases As Needed Below
+        // Test 3
+        Console.WriteLine("Test 3: Add new customers");
+        var cs3 = new CustomerService(3);
+        Console.WriteLine("Adding Customer 1...");
+        cs3.AddNewCustomer(); 
+        Console.WriteLine(cs3);
+        Console.WriteLine("Adding Customer 2...");
+        cs3.AddNewCustomer(); 
+        Console.WriteLine(cs3);
+        Console.WriteLine("Adding Customer 3...");
+        cs3.AddNewCustomer(); 
+        Console.WriteLine(cs3);
+        
     }
 
     private readonly List<Customer> _queue = new();
