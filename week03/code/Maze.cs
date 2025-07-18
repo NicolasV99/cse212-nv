@@ -30,36 +30,65 @@ public class Maze
     /// Check to see if you can move left.  If you can, then move.  If you
     /// can't move, throw an InvalidOperationException with the message "Can't go that way!".
     /// </summary>
-    public void MoveLeft()
-    {
-        // FILL IN CODE
+    public void MoveLeft(){
+        if (!_mazeMap.TryGetValue((_currX, _currY), out bool[] directions)){
+            throw new InvalidOperationException("Current location not found in maze map.");
+        }      
+        if (directions[0] == true) {
+            _currX--;
+        }
+        else{
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     /// <summary>
     /// Check to see if you can move right.  If you can, then move.  If you
     /// can't move, throw an InvalidOperationException with the message "Can't go that way!".
     /// </summary>
-    public void MoveRight()
-    {
-        // FILL IN CODE
+    public void MoveRight(){
+        if (!_mazeMap.TryGetValue((_currX, _currY), out bool[] directions)){
+            throw new InvalidOperationException("Current location not found in maze map.");
+        }
+        if (directions[1] == true){
+            _currX++; 
+        }
+        else{
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     /// <summary>
     /// Check to see if you can move up.  If you can, then move.  If you
     /// can't move, throw an InvalidOperationException with the message "Can't go that way!".
     /// </summary>
-    public void MoveUp()
-    {
-        // FILL IN CODE
+    public void MoveUp(){
+        if (!_mazeMap.TryGetValue((_currX, _currY), out bool[] directions)){
+            throw new InvalidOperationException("Current location not found in maze map.");
+        }
+
+        if (directions[2] == true){
+            _currY--; 
+        }
+        else{
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     /// <summary>
     /// Check to see if you can move down.  If you can, then move.  If you
     /// can't move, throw an InvalidOperationException with the message "Can't go that way!".
     /// </summary>
-    public void MoveDown()
-    {
-        // FILL IN CODE
+    public void MoveDown(){
+        if (!_mazeMap.TryGetValue((_currX, _currY), out bool[] directions)){
+            throw new InvalidOperationException("Current location not found in maze map.");
+        }
+        if (directions[3] == true){
+            _currY++; 
+        }
+        else{
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     public string GetStatus()
